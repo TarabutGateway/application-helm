@@ -6,13 +6,13 @@ labels:
   group: application-helm
 deployment:
 
-  # By default deploymentStrategy is set to rollingUpdate with maxSurge of 25% and maxUnavailable of 25%
+  # By default deploymentStrategy is set to rollingUpdate
   # You can change type to `Recreate` or can uncomment `rollingUpdate` specification and adjust them to your usage.
   strategy:
     type: RollingUpdate
-    # rollingUpdate:
-    #   maxSurge: 25%
-    #   maxUnavailable: 25%
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   
   # Select nodes to deploy which matches the following labels  
   nodeSelector:
@@ -47,9 +47,11 @@ deployment:
   additionalPodAnnotations:
     # key: value
 
-
   # Replicas to be created
   replicas: 1
+
+  # Revision History Limit for Replica Sets
+  revisionHistoryLimit: 4
 
   # Secrets used to pull image
   imagePullSecrets: "docker"
@@ -112,34 +114,41 @@ deployment:
     tag: v1.0.0
     pullPolicy: IfNotPresent
 
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - all
+
   # Readiness and Liveness probes
-  # readinessProbe:
-  #   failureThreshold: 3
-  #   periodSeconds: 10
-  #   successThreshold: 1
-  #   timeoutSeconds: 1
-  #   initialDelaySeconds: 10
-  #   httpGet:
-  #     path: /path
-  #     port: 8080
-  # livenessProbe:
-  #   failureThreshold: 3
-  #   periodSeconds: 10
-  #   successThreshold: 1
-  #   timeoutSeconds: 1
-  #   initialDelaySeconds: 10
-  #   httpGet:
-  #     path: /path
-  #     port: 8080
+  readinessProbe:
+    failureThreshold: 3
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+    initialDelaySeconds: 10
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8080
+  livenessProbe:
+    failureThreshold: 3
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+    initialDelaySeconds: 30
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
 
   # Resources to be defined for pod
   resources: 
-    # limits:
-    #   memory: 256Mi
-    #   cpu: 0.5
-    # requests:
-    #   memory: 128Mi
-    #   cpu: 0.1
+    limits:
+      memory: 512Mi
+      cpu: 0.5
+    requests:
+      memory: 128Mi
+      cpu: 0.2
 
   # Add additional containers besides init and app containers
   additionalContainers:
@@ -150,7 +159,11 @@ deployment:
 
   # Security Context for the pod
   securityContext:
-    # fsGroup: 2000
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 3000
+    fsGroup: 2000
+    
 
 # Add Storage volumes to the pods
 persistence:
@@ -319,7 +332,7 @@ secret:
 
 # Service Monitor to collect Prometheus metrices
 serviceMonitor:
-  enabled: false
+  enabled: true
   
   # Additional labels
   additionalLabels:
@@ -331,7 +344,7 @@ serviceMonitor:
 
   # List of the endpoints of service from which prometheus will scrape data
   endpoints:
-  - interval: 5s
+  - interval: 10s
     path: /actuator/prometheus
     port: http
 

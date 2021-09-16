@@ -15,6 +15,7 @@ metadata:
   name: {{ template "application.name" . }}
 spec:
   replicas: {{ .Values.deployment.replicas }}
+  revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   selector:
     matchLabels:
 {{ include "application.labels.selector" . | indent 6 }}
@@ -58,6 +59,10 @@ spec:
       - name: {{ template "application.name" . }}
         image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+        {{- if .Values.deployment.containerSecurityContext }}
+        securityContext:      
+{{ toYaml .Values.deployment.containerSecurityContext | indent 10 }}
+          {{- end }}
         {{- if .Values.deployment.envFrom }}
         envFrom:
         {{- range .Values.deployment.envFrom }}

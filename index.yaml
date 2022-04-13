@@ -2,6 +2,14 @@ apiVersion: v1
 entries:
   application-helm:
   - apiVersion: v2
+    created: "2022-04-13T12:53:36.732466547Z"
+    description: A generic helm chart for all sort of applications
+    digest: 7ed659847f95d6360c579fc37e554ac55815925c983a73d59a34c9736160b03f
+    name: application-helm
+    urls:
+    - https://github.com/TarabutGateway/application-helm/releases/download/application-helm-0.0.5/application-helm-0.0.5.tgz
+    version: 0.0.5
+  - apiVersion: v2
     created: "2022-04-13T10:37:03.021938399Z"
     description: A generic helm chart for all sort of applications
     digest: 63cc7b26ad7f59b30176517aa7738fca60606a867ba0a06c5b901a79de146900
@@ -33,4 +41,4 @@ entries:
     urls:
     - https://github.com/TarabutGateway/application-helm/releases/download/application-helm-0.0.1/application-helm-0.0.1.tgz
     version: 0.0.1
-generated: "2022-04-13T10:37:03.021951Z"
+generated: "2022-04-13T12:53:36.732487447Z"

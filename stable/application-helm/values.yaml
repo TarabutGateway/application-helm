@@ -407,17 +407,3 @@ autoscaling:
       name: memory
       targetAverageUtilization: 60
 
-namespace:
-  name: namespace-name
-
-application:
-  environment: application-env
-  metadata:
-    name: application-name
-    repoName: repo-name
-  spec:
-    destination:
-      namespace: namespace
-    source:
-      path: url-path
-      repoUrl: repo-url

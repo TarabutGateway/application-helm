@@ -1,8 +1,14 @@
 # application-helm
 Generic helm chart for all sorts of applications
 
+## Sub templating allowed in the following Values or sub values:
 
-# versioning 
+- ingress.hosts[].host
+- ingress.annotations
+- ingress.tls
+- configMap.files[].data
+
+# versioning
 
 When updating the repo with a new template or values you must also update the `chart.yaml` file with the next version
 

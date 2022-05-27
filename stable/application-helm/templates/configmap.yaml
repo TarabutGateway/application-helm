@@ -20,7 +20,7 @@ metadata:
   name: {{ template "application.name" $ }}-{{ .nameSuffix }}
   {{- end }}
 data:
-{{ toYaml .data | indent 2 }}
+{{ tpl (.data | toYaml) $ | indent 2 }}
 ---
 {{- end }}
 {{- end }}

@@ -18,7 +18,7 @@ metadata:
 spec:
   rules:
     {{- range .Values.ingress.hosts }}
-    - host: {{ .host }}
+    - host: {{ tpl .host $ }}
       http:
         paths:
           {{- range .paths }}
@@ -27,13 +27,13 @@ spec:
             backend:
               service:
                 name: {{ template "application.name" $ }}
-                port: 
+                port:
                   name: {{ $servicePort }}
           {{- end }}
     {{- end -}}
   {{- if .Values.ingress.tls }}
   tls:
-{{ toYaml .Values.ingress.tls | indent 4 }}
+{{ tpl (.Values.ingress.tls | toYaml) . | indent 4 }}
   {{- end -}}
 {{- end -}}
 {{- end -}}

@@ -91,7 +91,7 @@ spec:
         {{- end }}
         {{- end }}
         env:
-          {{- if or (.Values.deployment.env)}}
+          {{- if .Values.deployment.env }}
 {{ toYaml .Values.deployment.env | indent 10 }}
           {{- end }}
           - name: DD_ENV
@@ -151,7 +151,7 @@ spec:
       - name: apmsocketpath
         hostPath:
           path: /var/run/datadog/
-          
+
       {{- if .Values.rbac.serviceAccount.name }}
       serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
         {{- else }}

@@ -1,0 +1,68 @@
+{{- if .Values.datadog }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+  {{- if .Values.datadog.metadata.labels }}
+    {{- if .Values.datadog.metadata.labels.env }}
+    tags.datadoghq.com/env: {{ .Values.datadog.metadata.labels.env }}
+    {{- end }}    
+    {{- if .Values.datadog.labels.service }}
+    tags.datadoghq.com/service: {{ .Values.datadog.metadata.labels.service }}
+    {{- end }}    
+    {{- if .Values.datadog.labels.version }}
+    tags.datadoghq.com/version: {{ .Values.datadog.metadata.labels.version }}
+    {{- end }}    
+  {{- end }}    
+spec:
+  template:
+    metadata:
+      labels:
+  {{- if .Values.datadog.spec.metadata.labels }}
+    {{- if .Values.datadog.spec.metadata.labels.env }}
+    tags.datadoghq.com/env: {{ .Values.datadog.spec.metadata.labels.env }}
+    {{- end }}    
+    {{- if .Values.datadog.spec.labels.service }}
+    tags.datadoghq.com/service: {{ .Values.datadog.spec.metadata.labels.service }}
+    {{- end }}    
+    {{- if .Values.datadog.spec.labels.version }}
+    tags.datadoghq.com/version: {{ .Values.datadog.spec.metadata.labels.version }}
+    {{- end }}    
+  {{- end }}  
+    spec:
+      volumes:
+        - hostPath:
+            path: /var/run/datadog/
+        {{- if .Values.datadog.spec.volumes.hostPath.name }}
+          name: {{ .Values.datadog.spec.volumes.hostPath.name }}
+        {{- end }}  
+      containers:
+      {{- if .Values.datadog.spec.containers.name }}
+        - name: {{ .Values.datadog.spec.containers.name }}
+      {{- end}}
+        {{- if .Values.datadog.spec.containers.image }}
+          image: {{ .Values.datadog.spec.containers.image }}
+        {{- end}}
+          volumeMounts:
+          {{- if .Values.datadog.spec.containers.volumeMounts.name }}
+            - name: {{ .Values.datadog.spec.containers.volumeMounts.name }}
+          {{- end}}
+              mountPath: /var/run/datadog
+          env:
+            - name: DD_ENV
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/env']
+            - name: DD_SERVICE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/service']
+            - name: DD_VERSION
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.labels['tags.datadoghq.com/version']
+          {{- if .Values.datadog.spec.containers.env.log.injection.enabled }}
+            - name: DD_LOGS_INJECTION
+              value: {{ .Values.datadog.spec.containers.env.log.injection.enabled }}
+          {{- end}}
+{{- end }}

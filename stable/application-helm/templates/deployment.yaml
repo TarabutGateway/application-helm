@@ -8,6 +8,11 @@ metadata:
 {{- if .Values.deployment.additionalLabels }}
 {{ toYaml .Values.deployment.additionalLabels | indent 4 }}
 {{- end }}
+{{- if (eq .Values.datadog.enabled true) }}
+    tags.datadoghq.com/env: "${ENVIRONMENT}"
+    tags.datadoghq.com/service: "${RELEASE_NAME}"
+    tags.datadoghq.com/version: "${GIT_TAG}"
+{{- end }}
 {{- if .Values.deployment.annotations }}
   annotations:
 {{ toYaml .Values.deployment.annotations | indent 4 }}
@@ -29,6 +34,11 @@ spec:
 {{ include "application.labels.selector" . | indent 8 }}
 {{- if .Values.deployment.podLabels }}
 {{ toYaml .Values.deployment.podLabels | indent 8 }}
+{{- end }}
+{{- if (eq .Values.datadog.enabled true) }}
+        tags.datadoghq.com/env: "${ENVIRONMENT}"
+        tags.datadoghq.com/service: "${RELEASE_NAME}"
+        tags.datadoghq.com/version: "${GIT_TAG}"
 {{- end }}
     spec:
       {{- if .Values.deployment.hostAliases }}
@@ -84,9 +94,23 @@ spec:
         {{- end }}
         {{- end }}
         {{- end }}
-        {{- if .Values.deployment.env }}
+        {{- if or (.Values.deployment.env) (eq .Values.datadog.enabled true) }}
         env:
 {{ toYaml .Values.deployment.env | indent 10 }}
+          {{- if (eq .Values.datadog.enabled true) }}
+          - name: DD_ENV
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/env']
+          - name: DD_SERVICE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/service']
+          - name: DD_VERSION
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.labels['tags.datadoghq.com/version']
+          {{- end }}
         {{- end }}
 {{- if .Values.deployment.livenessProbe }}
         livenessProbe:
@@ -96,7 +120,7 @@ spec:
         readinessProbe:
 {{ toYaml .Values.deployment.readinessProbe | indent 10 }}
 {{- end }}
-      {{- if or (.Values.deployment.volumeMounts) (and (eq .Values.persistence.enabled true) (eq .Values.persistence.mountPVC true) )}} 
+      {{- if or (.Values.deployment.volumeMounts) (and (eq .Values.persistence.enabled true) (eq .Values.persistence.mountPVC true) ) (eq .Values.datadog.enabled true)}} 
         volumeMounts:
         {{- if (eq .Values.persistence.mountPVC true) }}
         - mountPath: {{ .Values.persistence.mountPath }}
@@ -104,6 +128,10 @@ spec:
         {{- end }}
         {{- if .Values.deployment.volumeMounts }}
 {{ toYaml .Values.deployment.volumeMounts | indent 8 }}
+        {{- end }}
+        {{- if (eq .Values.datadog.enabled true) }}
+        - mountPath: /var/run/datadog
+          name: apmsocketpath
         {{- end }}
       {{- end }}
 {{- if .Values.deployment.resources }}
@@ -117,7 +145,7 @@ spec:
       securityContext:      
 {{ toYaml .Values.deployment.securityContext | indent 8 }}
           {{- end }}
-      {{- if or (.Values.deployment.volumes) (and (eq .Values.persistence.enabled true) (eq .Values.persistence.mountPVC true) )}} 
+      {{- if or (.Values.deployment.volumes) (and (eq .Values.persistence.enabled true) (eq .Values.persistence.mountPVC true) ) (eq .Values.datadog.enabled true)}} 
       volumes:
         {{- if (eq .Values.persistence.mountPVC true) }}
       - name: {{ template "application.name" . }}-data
@@ -127,7 +155,12 @@ spec:
         {{- if .Values.deployment.volumes }}
 {{ toYaml .Values.deployment.volumes | indent 6 }}
         {{- end }}
-      {{- end }}  
+      {{- end }}
+      {{- if (eq .Values.datadog.enabled true) }}
+      - name: apmsocketpath
+        hostPath:
+          path: /var/run/datadog/
+      {{- end }}
       {{- if .Values.rbac.serviceAccount.name }}
       serviceAccountName: {{ .Values.rbac.serviceAccount.name }}
         {{- else }}

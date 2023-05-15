@@ -23,6 +23,10 @@ spec:
   strategy:
 {{ toYaml .Values.deployment.strategy | indent 4 }}
 {{- end }}
+{{- if .Values.deployment.topologySpreadConstraints }}
+  topologySpreadConstraints:
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 4 }}
+{{- end }}
   template:
     metadata:
       labels:

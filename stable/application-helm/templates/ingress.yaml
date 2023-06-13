@@ -18,10 +18,9 @@ metadata:
 spec:
   rules:
     {{- range .Values.ingress.hosts }}
+    {{- $serviceName := include "application.name" $ -}}
     {{- if .customService -}}
-    {{- $serviceName := .customService -}}
-    {{- else -}}
-    {{- $serviceName := template "application.name" $ -}}
+    {{- $serviceName = .customService -}}
     {{- end }}
     - host: {{ tpl .host $ }}
       http:

@@ -22,6 +22,9 @@ spec:
     {{- if .customService -}}
     {{- $serviceName = .customService -}}
     {{- end }}
+    {{- if .customPort -}}
+    {{- $servicePort = .customPort -}}
+    {{- end }}
     - host: {{ tpl .host $ }}
       http:
         paths:

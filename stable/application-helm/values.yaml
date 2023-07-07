@@ -142,10 +142,9 @@ deployment:
       port: 8080
 
   # Resources to be defined for pod
-  resources: 
+  resources:
     limits:
       memory: 512Mi
-      cpu: 0.5
     requests:
       memory: 128Mi
       cpu: 0.2

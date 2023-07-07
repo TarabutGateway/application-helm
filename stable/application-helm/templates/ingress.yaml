@@ -18,6 +18,13 @@ metadata:
 spec:
   rules:
     {{- range .Values.ingress.hosts }}
+    {{- $serviceName := include "application.name" $ -}}
+    {{- if .customService -}}
+    {{- $serviceName = .customService -}}
+    {{- end }}
+    {{- if .customPort -}}
+    {{- $servicePort = .customPort -}}
+    {{- end }}
     - host: {{ tpl .host $ }}
       http:
         paths:
@@ -26,7 +33,7 @@ spec:
             pathType: ImplementationSpecific
             backend:
               service:
-                name: {{ template "application.name" $ }}
+                name: {{ $serviceName }}
                 port:
                   name: {{ $servicePort }}
           {{- end }}

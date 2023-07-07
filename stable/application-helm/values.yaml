@@ -197,6 +197,11 @@ service:
       protocol: TCP
       targetPort: 8080
 
+
+  external-service:
+    # - name: my-database-name
+    # - ip-address: 16.0.0.2
+
 # Ingress object for exposing services
 ingress:
   enabled: false

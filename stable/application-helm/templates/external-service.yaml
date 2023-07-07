@@ -1,0 +1,12 @@
+{{- if .Values.external-service }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "external-service.name" . }}
+  labels:
+    {{ include "application.labels" . | indent 4 }}
+    {{ include "application.labels.chart" . | nindent 4 }}
+spec:
+  type: ExternalName
+  externalName: {{ .Values.external-service.ip-address }}
+{{- end }}

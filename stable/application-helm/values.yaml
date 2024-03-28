@@ -406,3 +406,9 @@ autoscaling:
       name: memory
       targetAverageUtilization: 60
 
+# cronTasks {name, command, schedule}.
+# CronJobs to run either an arbitrary command.
+cronTasks:
+  - name: run-some-script
+    command: "script/some_script"
+    schedule: "1 * * * *"

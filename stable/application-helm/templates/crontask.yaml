@@ -1,0 +1,33 @@
+{{- if .Values.cronTasks }}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  labels:
+{{ include "application.labels" . | indent 4 }}
+{{ include "application.labels.chart" . | indent 4 }}
+{{- if .Values.deployment.additionalLabels }}
+{{ toYaml .Values.deployment.additionalLabels | indent 4 }}
+{{- end }}
+{{- if .Values.deployment.annotations }}
+  annotations:
+{{ toYaml .Values.deployment.annotations | indent 4 }}
+{{- end }}
+  name: {{ template "application.name" . }}
+spec:
+  schedule: {{ .schedule }}
+  jobTemplate:
+    metadata:
+      name: {{ template "application.name" . }}
+    spec:
+      template:
+        metadata:
+          name: {{ template "application.name" . }}
+        spec:
+          containers:
+          - name: cron-job
+            image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
+            imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
+            command: ["/bin/bash"]
+            args: ["-c", "{{ .command }}"]
+          restartPolicy: OnFailure
+{{- end }}

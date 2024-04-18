@@ -407,5 +407,5 @@ autoscaling:
       targetAverageUtilization: 60
 
 poddisruptionbudget:
-  enabled: true # if you enable this, make sure your deployment creates atleast minAvailable+1 pods for no downtime deployment
+  enabled: false # if you enable this, make sure your deployment creates atleast minAvailable+1 pods for no downtime deployment
   minAvailable: 1 

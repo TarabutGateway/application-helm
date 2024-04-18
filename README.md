@@ -18,3 +18,10 @@ description: A generic helm chart for all sort of applications
 version: {new-version}`
 
 The above will have to be automated as part of the workflow at some point in the future.
+
+
+# Local testing
+
+```
+helm template ./stable/application-helm --values ./stable/application-helm/values.yaml
+```

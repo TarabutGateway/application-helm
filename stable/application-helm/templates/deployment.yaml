@@ -59,6 +59,27 @@ spec:
       imagePullSecrets:
       - name: {{ .Values.deployment.imagePullSecrets }}
       {{- end }}
+      {{- if .Values.deployment.dnsPolicy }}
+      dnsPolicy: {{ .Values.deployment.dnsPolicy }}
+      {{- end }}
+      {{- if .Values.deployment.dnsConfig }}
+      dnsConfig:
+        nameservers:
+        {{- range .Values.deployment.dnsConfig.nameservers }}
+          - {{ . }}
+        {{- end }}
+        searches:
+        {{- range .Values.deployment.dnsConfig.searches }}
+          - {{ . }}
+        {{- end }}
+        options:
+        {{- range .Values.deployment.dnsConfig.options }}
+          - name: {{ .name }}
+            {{- if .value }}
+            value: "{{ .value }}"
+            {{- end }}
+        {{- end }}
+      {{- end }}
       containers:
       - name: {{ template "application.name" . }}
         image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"

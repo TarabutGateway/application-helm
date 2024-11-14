@@ -163,6 +163,16 @@ deployment:
     runAsGroup: 3000
     fsGroup: 2000
     
+  # dnsPolicy: "None"
+  # dnsConfig:
+  #   nameservers:
+  #     - "8.8.8.8"
+  #     - "8.8.4.4"
+  #   searches:
+  #     - "my-namespace.svc.cluster.local"
+  #   options:
+  #     - name: "ndots"
+  #       value: "5"
 
 # Add Storage volumes to the pods
 persistence:

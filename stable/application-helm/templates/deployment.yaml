@@ -53,7 +53,7 @@ spec:
       {{- end }}
       {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+{{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
       {{- end }}
       {{- if .Values.deployment.imagePullSecrets }}      
       imagePullSecrets:

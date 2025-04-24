@@ -54,12 +54,12 @@ spec:
 {{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
       {{- range .Values.deployment.topologySpreadConstraints }}
-      - maxSkew: {{ .maxSkew }}
-        topologyKey: {{ .topologyKey | quote }}
-        whenUnsatisfiable: {{ .whenUnsatisfiable | quote }}
-        labelSelector:
-          matchLabels:
-          app: {{ .labelSelector.matchLabels.app | quote }}
+        - maxSkew: {{ .maxSkew }}
+          topologyKey: {{ .topologyKey | quote }}
+          whenUnsatisfiable: {{ .whenUnsatisfiable | quote }}
+          labelSelector:
+            matchLabels:
+              app: {{ .labelSelector.matchLabels.app | quote }}
       {{- end }}
 {{- end }}
       {{- if .Values.deployment.imagePullSecrets }}      

@@ -51,10 +51,17 @@ spec:
       affinity:
 {{ toYaml .Values.deployment.affinity | indent 8 -}}
       {{- end }}
-      {{- if .Values.deployment.topologySpreadConstraints }}
+{{- if .Values.deployment.topologySpreadConstraints }}
       topologySpreadConstraints:
-      {{ toYaml .Values.deployment.topologySpreadConstraints | indent 8 }}
+      {{- range .Values.deployment.topologySpreadConstraints }}
+        - maxSkew: {{ .maxSkew }}
+          topologyKey: {{ .topologyKey | quote }}
+          whenUnsatisfiable: {{ .whenUnsatisfiable | quote }}
+          labelSelector:
+            matchLabels:
+              app: {{ .labelSelector.matchLabels.app | quote }}
       {{- end }}
+{{- end }}
       {{- if .Values.deployment.imagePullSecrets }}      
       imagePullSecrets:
       - name: {{ .Values.deployment.imagePullSecrets }}

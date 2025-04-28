@@ -108,12 +108,12 @@ deployment:
   #          values:
   #          - ssd
   topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: topology.kubernetes.io/zone
-      whenUnsatisfiable: "ScheduleAnyway"
-      labelSelector:
-        matchLabels:
-          app: application-helm
+#    - maxSkew: 1
+#      topologyKey: topology.kubernetes.io/zone
+#      whenUnsatisfiable: "ScheduleAnyway"
+#      labelSelector:
+#        matchLabels:
+#          app: application-helm
   # Image of the app container
   image: 
     repository: repository/image-name

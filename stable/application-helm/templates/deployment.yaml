@@ -30,6 +30,10 @@ spec:
 {{- if .Values.deployment.podLabels }}
 {{ toYaml .Values.deployment.podLabels | indent 8 }}
 {{- end }}
+{{- if .Values.deployment.podAnnotations }}
+    annotations:
+{{ toYaml .Values.deployment.podAnnotations | indent 8 }}
+{{- end }}
     spec:
       {{- if .Values.deployment.hostAliases }}
       hostAliases:

@@ -41,7 +41,7 @@ deployment:
     # env: prod
 
   podAnnotations:
-    # instrumentation.opentelemetry.io/inject-java: "true"
+    instrumentation.opentelemetry.io/inject-java: "false"
 
   # Annotations on deployments
   annotations:

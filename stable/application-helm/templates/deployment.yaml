@@ -93,7 +93,7 @@ spec:
       {{- end }}
       containers:
       - name: {{ template "application.name" . }}
-        image: "{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
+        image: "docker.io/{{ .Values.deployment.image.repository }}:{{ .Values.deployment.image.tag }}"
         imagePullPolicy: {{ .Values.deployment.image.pullPolicy }}
         {{- if .Values.deployment.containerSecurityContext }}
         securityContext:      

@@ -14,7 +14,10 @@ metadata:
 {{- end }}
   name: {{ template "application.name" . }}
 spec:
-  replicas: {{ .Values.deployment.replicas }}
+   # If HPA is enabled, we omit replicas so K8s/ArgoCD don't fight the autoscaler
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.deployment.replicas | default 1 }}
+  {{- end }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   selector:
     matchLabels:

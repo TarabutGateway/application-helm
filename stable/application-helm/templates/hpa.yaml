@@ -19,8 +19,27 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     name: {{ template "application.name" . }}
+
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 15
+      selectPolicy: Max
+
+    scaleDown:
+      stabilizationWindowSeconds: 120   # 👈 2 minutes instead of default 5
+      policies:
+        - type: Pods
+          value: 1
+          periodSeconds: 60
+      selectPolicy: Min
+
   metrics:
     {{- range .Values.autoscaling.metrics }}
     - type: {{ .type }}

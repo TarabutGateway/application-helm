@@ -348,57 +348,57 @@ secret:
   #     secretKey1: secretValue1
   #     secretKey2: secretValue2
 
-# Service Monitor to collect Prometheus metrices
-serviceMonitor:
-  enabled: true
+# # Service Monitor to collect Prometheus metrices
+# serviceMonitor:
+#   enabled: true
   
-  # Additional labels
-  additionalLabels:
-    # key: value
+#   # Additional labels
+#   additionalLabels:
+#     # key: value
 
-  # Additional annotations
-  annotations:
-    # key: value
+#   # Additional annotations
+#   annotations:
+#     # key: value
 
-  # List of the endpoints of service from which prometheus will scrape data
-  endpoints:
-  - interval: 10s
-    path: /actuator/prometheus
-    port: http
+#   # List of the endpoints of service from which prometheus will scrape data
+#   endpoints:
+#   - interval: 10s
+#     path: /actuator/prometheus
+#     port: http
 
-logging:
-  enabled: false
-  flows:
-  - name: "flow-name"
-    globalOutputRefs:
-    - es-app-output
-    filters:
-    - grep:
-        regexp:
-          - key: log
-            pattern: /^\d{4}-\d{2}-\d{2}(.*)$/
-    - tag_normaliser: {}
-    - parser:
-        remove_key_name_field: true
-        reserve_data: true
-        parse:
-          type: regexp
-          expression: >-
-            /^(?<logTime>[^\s]*)\s\[(?<traceId>[^]]*)\]\s\[(?<spanId>[^]]*)\]\s(?<logLevel>[^\s]*)\s+\[(?<threadId>[^]]*)\]\s(?<className>[^:]*):\s(?<logMessage>(.*))$/
-  - name: "flow-name2"
-    globalOutputRefs:
-    - es-event-app-output
-    filters:
-    - grep:
-        regexp:
-          - key: log
-            pattern: /^{(.*)$/
-    - tag_normaliser: {}
-    - parser:
-        remove_key_name_field: true
-        reserve_data: true
-        parse:
-          type: json
+# logging:
+#   enabled: false
+#   flows:
+#   - name: "flow-name"
+#     globalOutputRefs:
+#     - es-app-output
+#     filters:
+#     - grep:
+#         regexp:
+#           - key: log
+#             pattern: /^\d{4}-\d{2}-\d{2}(.*)$/
+#     - tag_normaliser: {}
+#     - parser:
+#         remove_key_name_field: true
+#         reserve_data: true
+#         parse:
+#           type: regexp
+#           expression: >-
+#             /^(?<logTime>[^\s]*)\s\[(?<traceId>[^]]*)\]\s\[(?<spanId>[^]]*)\]\s(?<logLevel>[^\s]*)\s+\[(?<threadId>[^]]*)\]\s(?<className>[^:]*):\s(?<logMessage>(.*))$/
+#   - name: "flow-name2"
+#     globalOutputRefs:
+#     - es-event-app-output
+#     filters:
+#     - grep:
+#         regexp:
+#           - key: log
+#             pattern: /^{(.*)$/
+#     - tag_normaliser: {}
+#     - parser:
+#         remove_key_name_field: true
+#         reserve_data: true
+#         parse:
+#           type: json
 
 # autoscaling is used for horizonal pod autoscaling
 autoscaling:

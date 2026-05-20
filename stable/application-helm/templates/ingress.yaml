@@ -22,6 +22,7 @@ spec:
   rules:
     {{- range .Values.ingress.hosts }}
     {{- $serviceName := include "application.name" $ -}}
+    {{- $pathType := .pathType | default "ImplementationSpecific" -}}
     {{- if .customService -}}
     {{- $serviceName = .customService -}}
     {{- end }}
@@ -33,7 +34,7 @@ spec:
         paths:
           {{- range .paths }}
           - path: {{ . }}
-            pathType: {{ .pathType | default "ImplementationSpecific" }}
+            pathType: {{ $pathType }}
             backend:
               service:
                 name: {{ $serviceName }}
